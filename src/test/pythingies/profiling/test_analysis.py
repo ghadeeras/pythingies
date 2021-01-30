@@ -1,5 +1,3 @@
-import unittest
-
 from pythingies.profiling import analyze
 from testing_utils import BaseTestCase
 
@@ -79,7 +77,3 @@ class AnalysisTest(BaseTestCase):
         ])
         self.assert_rec(analysis.threads_aggregation(), expectation)
         self.assert_rec(analysis.threads["thread1"], expectation)
-
-
-if __name__ == '__main__':
-    unittest.main()
