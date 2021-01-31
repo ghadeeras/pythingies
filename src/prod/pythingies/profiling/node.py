@@ -17,6 +17,21 @@ class AnalysisNode:
         self.minTime = 0x7F_FF_FF_FF_FF_FF_FF_FF
         self.maxTime = 0
 
+    def insert_missing_parent(self, name: str):
+        copy = AnalysisNode(self, name)
+        copy.children = self.children
+        for child in copy.children.values():
+            child.parent = copy
+        copy.count = self.count
+        copy.firstTime = self.firstTime
+        copy.lastTime = self.lastTime
+        copy.lastLeaveTime = self.lastLeaveTime
+        copy.totalTime = self.totalTime
+        copy.minTime = self.minTime
+        copy.maxTime = self.maxTime
+        self.children = {name: copy}
+        return copy
+
     def handle(self, event: Event):
         if event.kind == Event.ENTER:
             if event.name not in self.children:
@@ -36,13 +51,17 @@ class AnalysisNode:
 
     def leave(self, event: Event):
         assert event.kind == Event.LEAVE
-        assert event.name == self.name
-        delta = event.time - self.lastTime
-        self.lastLeaveTime = event.time
-        self.totalTime += delta
-        self.minTime = min(delta, self.minTime)
-        self.maxTime = max(delta, self.maxTime)
-        return self.parent
+        if event.name == self.name:
+            delta = event.time - self.lastTime
+            self.lastLeaveTime = event.time
+            self.totalTime += delta
+            self.minTime = min(delta, self.minTime)
+            self.maxTime = max(delta, self.maxTime)
+            return self.parent
+        else:
+            assert not self.parent
+            missing_parent = self.insert_missing_parent(event.name)
+            return missing_parent.leave(event)
 
     def do_leave(self):
         time = self.lastTime
