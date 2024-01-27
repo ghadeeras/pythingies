@@ -6,7 +6,7 @@ if __name__ == "__main__":
     controller = Controller(
         open_msx_path=os.environ["OPENMSX_PATH"],
         macros={
-            "switch on": [
+            "on": [
                 "machine Sanyo_PHC-70FD",
                 # "machine Sanyo_PHC-23JB",
                 # "ext AVT_DPF-550",
@@ -19,9 +19,10 @@ if __name__ == "__main__":
                 "toggle power",
                 "debug set_watchpoint -once write_mem 0xfffe {[debug read \"memory\" 0xfffe] == 0} {diska insert $disk}",
                 "type_via_keybuf \\r\\r",
-                "type_via_keybuf poke-2,0\\r",
-                "type_via_keybuf cls\\r",
-                "type_via_keybuf run\"$file\"\\r"
+                "type_via_keybuf POKE-2,0\\r",
+                "type_via_keybuf CALLBC\\r",
+                "type_via_keybuf CLS\\r",
+                "type_via_keybuf RUN\"$file\"\\r"
             ]
         },
         variables={
