@@ -10,7 +10,7 @@ events, the tool could generate a report to better understand where CPU time is 
 import pythingies.profiling as prof
 
 events = some_code_parsing_profiling_logs()
-analysis = prof.analysis(events)
+analysis = prof.analyze(events)
 prof.xml_report(analysis, '/path/to/report.xml') 
 ```
 
